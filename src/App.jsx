@@ -458,7 +458,7 @@ export default function App() {
             </div>
             <h2 className="section-title">Pick a perfect date</h2>
             <p className="section-desc">
-              Select a day on the calendar when you are free to hang out:{" "}
+            O Dane joj ah sor sor ng hv gai na o penh jit select mk o sml:{" "}
             </p>
 
             <div
