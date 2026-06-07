@@ -9,13 +9,15 @@ import {
   Soup, 
   Trees, 
   ArrowRight, 
-  Check 
+  Check,
+  Sparkles
 } from "lucide-react";
 
 export default function App() {
   const [step, setStep] = useState(0); // 0: Envelope, 1: Question, 2: Date, 3: Place, 4: Yay!
   const [selectedDate, setSelectedDate] = useState("");
   const [place, setPlace] = useState("");
+  const [customPlace, setCustomPlace] = useState("");
   const [submitted, setSubmitted] = useState(false);
   
   // Interactive "No" button state
@@ -214,14 +216,16 @@ export default function App() {
     { name: "Cafe", icon: Coffee, subtitle: "Cozy café, warm drinks & sweet pastries" },
     { name: "Movie", icon: Film, subtitle: "Giant screen, popcorn & holding hands" },
     { name: "HotPot", icon: Soup, subtitle: "Delicious food & romantic ambience" },
-    { name: "Koh Norea", icon: Trees, subtitle: "A scenic walk, fresh breeze & cute picnic" }
+    { name: "Koh Norea", icon: Trees, subtitle: "A scenic walk, fresh breeze & cute picnic" },
+    { name: "Other", icon: Sparkles, subtitle: "Choose your own custom romantic place! ✨" }
   ];
 
   // Send RSVP selections to Supabase database table 'date_responses'
   const submitResponse = async () => {
-    if (!place) {
+    const finalPlace = place === "Other" ? customPlace.trim() : place;
+    if (!finalPlace) {
       playSound('no');
-      alert("Please choose a romantic place for us!");
+      alert(place === "Other" ? "Please suggest where you want us to go! 💝" : "Please choose a romantic place for us!");
       return;
     }
     
@@ -235,7 +239,7 @@ export default function App() {
           {
             girlfriend_name: "Dane",
             selected_date: selectedDate,
-            selected_place: place,
+            selected_place: finalPlace,
             answer: "YES ❤️"
           }
         ]);
@@ -458,10 +462,27 @@ export default function App() {
               })}
             </div>
 
+            {place === "Other" && (
+              <div className="custom-place-input-container">
+                <label htmlFor="custom-place-input" className="custom-place-label">
+                  Where would you like to go instead? 💝
+                </label>
+                <input
+                  id="custom-place-input"
+                  type="text"
+                  placeholder="e.g. My favorite restaurant, a sunset walk..."
+                  value={customPlace}
+                  onChange={(e) => setCustomPlace(e.target.value)}
+                  className="custom-place-input"
+                  maxLength={100}
+                />
+              </div>
+            )}
+
             <button
               id="btn-place-submit"
               onClick={submitResponse}
-              disabled={isSubmitting || !place}
+              disabled={isSubmitting || !place || (place === "Other" && !customPlace.trim())}
               className="btn-submit"
             >
               {isSubmitting ? (
@@ -487,7 +508,7 @@ export default function App() {
             </div>
             <h2 className="yay-heading">It's officially a date, Dane!</h2>
             <p className="yay-text">
-              I've sent our selections over. Mark your calendar for <strong className="highlight-date">{selectedDate}</strong> at the <strong className="highlight-place">{place}</strong>.
+              I've sent our selections over. Mark your calendar for <strong className="highlight-date">{selectedDate}</strong> at the <strong className="highlight-place">{place === "Other" ? customPlace : place}</strong>.
             </p>
             <p className="yay-footer">Can't wait to make beautiful memories with you! 💕</p>
           </div>
