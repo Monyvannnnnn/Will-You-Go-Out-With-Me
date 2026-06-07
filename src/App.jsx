@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
+import { 
+  Heart, 
+  Calendar, 
+  MapPin, 
+  Coffee, 
+  Film, 
+  Soup, 
+  Trees, 
+  ArrowRight, 
+  Check 
+} from "lucide-react";
 
 export default function App() {
   const [step, setStep] = useState(0); // 0: Envelope, 1: Question, 2: Date, 3: Place, 4: Yay!
@@ -200,10 +211,10 @@ export default function App() {
 
   // Places with icons, subtitles, and standard key tags matching the user's template
   const placesList = [
-    { name: "Coffee Shop ☕", subtitle: "Cozy café, warm drinks & sweet pastries" },
-    { name: "Cinema 🎬", subtitle: "Giant screen, popcorn & holding hands" },
-    { name: "Restaurant 🍝", subtitle: "Delicious food & romantic ambience" },
-    { name: "Park 🌳", subtitle: "A scenic walk, fresh breeze & cute picnic" }
+    { name: "Cafe", icon: Coffee, subtitle: "Cozy café, warm drinks & sweet pastries" },
+    { name: "Movie", icon: Film, subtitle: "Giant screen, popcorn & holding hands" },
+    { name: "HotPot", icon: Soup, subtitle: "Delicious food & romantic ambience" },
+    { name: "Koh Norea", icon: Trees, subtitle: "A scenic walk, fresh breeze & cute picnic" }
   ];
 
   // Send RSVP selections to Supabase database table 'date_responses'
@@ -314,7 +325,7 @@ export default function App() {
               </div>
               <div className="envelope-body"></div>
               <div className="wax-seal">
-                <span className="seal-heart">❤️</span>
+                <Heart size={20} className="seal-heart-icon" fill="white" color="white" />
               </div>
             </div>
             <p className="envelope-tip">Click the envelope to open</p>
@@ -324,7 +335,9 @@ export default function App() {
         {/* STEP 1: The Romantic Ask */}
         {step === 1 && (
           <div className="ask-card">
-            <div className="ask-emoji">💝</div>
+            <div className="ask-emoji">
+              <Heart size={64} className="header-icon-heart" fill="var(--primary)" color="var(--primary)" />
+            </div>
             <h1 className="ask-title">Hi Dane ❤️</h1>
             <p className="ask-subtitle">Will you go on a date with me?</p>
             
@@ -338,7 +351,7 @@ export default function App() {
                 style={{ transform: `scale(${yesButtonScale})` }}
                 className="btn-yes animate-pulse"
               >
-                Yes ❤️
+                Yes <Heart size={18} className="inline-icon" fill="white" style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '6px' }} />
               </button>
 
               <button
@@ -374,7 +387,9 @@ export default function App() {
         {/* STEP 2: The Date Picker */}
         {step === 2 && (
           <div className="date-card">
-            <div className="card-header-icon">📅</div>
+            <div className="card-header-icon">
+              <Calendar size={48} className="header-icon" />
+            </div>
             <h2 className="section-title">Pick a perfect date</h2>
             <p className="section-desc">Select a day on the calendar when you are free to hang out: </p>
             
@@ -401,7 +416,7 @@ export default function App() {
               onClick={handleDateContinue}
               className="btn-continue"
             >
-              Continue 💖
+              Continue <ArrowRight size={18} className="inline-icon" style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '6px' }} />
             </button>
           </div>
         )}
@@ -409,14 +424,16 @@ export default function App() {
         {/* STEP 3: The Place Picker */}
         {step === 3 && (
           <div className="place-card">
-            <div className="card-header-icon">📍</div>
+            <div className="card-header-icon">
+              <MapPin size={48} className="header-icon" />
+            </div>
             <h2 className="section-title">Choose a dreamy place</h2>
             <p className="section-desc">Select where you would love to spend our time together:</p>
 
             <div className="places-grid">
               {placesList.map((item) => {
                 const isSelected = place === item.name;
-                const baseName = item.name.split(" ")[0].toLowerCase();
+                const baseName = item.name.toLowerCase();
                 return (
                   <div
                     id={`place-card-${baseName}`}
@@ -425,13 +442,17 @@ export default function App() {
                     onClick={() => handlePlaceSelect(item.name)}
                   >
                     <div className="place-icon-container">
-                      <span className="place-icon">{item.name.split(" ")[1] || "💖"}</span>
+                      <item.icon className="place-icon" size={24} />
                     </div>
                     <div className="place-info">
-                      <h3 className="place-name">{item.name.split(" ")[0]}</h3>
+                      <h3 className="place-name">{item.name}</h3>
                       <p className="place-desc">{item.subtitle}</p>
                     </div>
-                    {isSelected && <div className="checkmark-badge">✓</div>}
+                    {isSelected && (
+                      <div className="checkmark-badge">
+                        <Check size={14} strokeWidth={3} />
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -445,10 +466,12 @@ export default function App() {
             >
               {isSubmitting ? (
                 <div className="submitting-spinner">
-                  <span className="spinner-heart">❤️</span> Sending...
+                  <Heart className="spinner-heart" size={18} fill="currentColor" style={{ display: 'inline', verticalAlign: 'middle', marginRight: '6px' }} /> Sending...
                 </div>
               ) : (
-                "Lock it in! ❤️"
+                <>
+                  Lock it in! <Heart size={18} className="inline-icon" fill="white" style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '6px' }} />
+                </>
               )}
             </button>
           </div>

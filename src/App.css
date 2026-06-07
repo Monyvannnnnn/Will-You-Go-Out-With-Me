@@ -518,8 +518,22 @@ body {
   background: var(--primary);
 }
 
+.place-icon {
+  color: var(--primary);
+  transition: all 0.3s ease;
+  display: block;
+}
+
 .place-grid-card.selected .place-icon {
+  color: white;
+  stroke: white;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.header-icon {
+  color: var(--primary);
+  display: block;
+  margin: 0 auto;
 }
 
 .place-name {
